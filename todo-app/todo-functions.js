@@ -9,28 +9,63 @@ const getSavedTodos = _ => {
 }
 
 // Save todos to localStorage
-const saveTodos = to_dos => {
-    localStorage.setItem('todos',JSON.stringify(to_dos))
+const saveTodos = todos => {
+    localStorage.setItem('todos',JSON.stringify(todos))
+}
+
+// Remove todo from list
+const removeTodo = id => {
+    const todoIndex = todos.findIndex(todo => {
+        return todo.id === id
+    })
+
+    if (todoIndex > -1) {
+        todos.splice(todoIndex, 1)
+    }
+}
+
+// Change todo status
+const isCompleted = (id, completedTodo) => {
+    const todoIndex = todos.findIndex(todo => {
+        return todo.id === id
+    })
+    if (todoIndex > -1) {
+        todos[todoIndex].completed = completedTodo
+    }
 }
 
 // Generate Todo DOM
-const generateTodoDOM = to_do => {
+const generateTodoDOM = todo => {
     const todoElement = document.createElement('div')
     const checkbox = document.createElement('input')
     const todoText = document.createElement('span')
     const removeButton = document.createElement('button')
 
-    // Configure checkbox for to_do
+    // Configure checkbox for todo
+
     checkbox.setAttribute('type', 'checkbox')
     todoElement.appendChild(checkbox)
+    checkbox.checked = todo.completed
+    todoElement.addEventListener('change', e => {
+        const completedTodo = e.target.checked
+        console.log(completedTodo);
+        isCompleted(todo.id, completedTodo)
+        saveTodos(todos)
+        renderTodos(todos,filters)
+    })
 
-    // Add to_do content to list
-    todoText.textContent = to_do.text
+    // Add todo content to list
+    todoText.textContent = todo.text
     todoElement.appendChild(todoText)
 
     // Add remove button
-    removeButton.textContent = 'Delete Todo'
+    removeButton.textContent = 'x'
     todoElement.appendChild(removeButton)
+    removeButton.addEventListener('click', e => {
+        removeTodo(todo.id)
+        saveTodos(todos)
+        renderTodos(todos, filters)
+    })
 
     return todoElement
 }
@@ -46,10 +81,10 @@ const generateSummaryDOM = filteredToDos => {
 }
 
 // Render todos list
-const renderTodos = (to_dos, filters) => {
-    const filteredToDos = to_dos.filter(to_do => {
-        const searchTextMatch = to_do.text.toLowerCase().includes(filters.searchText.toLowerCase())
-        const hideCompletedMatch = !filters.hideCompleted || !to_do.completed
+const renderTodos = (todos, filters) => {
+    const filteredToDos = todos.filter(todo => {
+        const searchTextMatch = todo.text.toLowerCase().includes(filters.searchText.toLowerCase())
+        const hideCompletedMatch = !filters.hideCompleted || !todo.completed
         return searchTextMatch && hideCompletedMatch
     })
 
@@ -57,8 +92,8 @@ const renderTodos = (to_dos, filters) => {
     const summary = generateSummaryDOM(filteredToDos)
     document.querySelector('#todos').appendChild(summary)
 
-    filteredToDos.forEach(to_do => {
-        const todoElement = generateTodoDOM(to_do)
+    filteredToDos.forEach(todo => {
+        const todoElement = generateTodoDOM(todo)
         document.querySelector('#todos').appendChild(todoElement)
     });
 }
