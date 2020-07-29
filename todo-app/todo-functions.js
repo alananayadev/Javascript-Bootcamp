@@ -1,23 +1,20 @@
 //Fetch existing todos from localStorage
-const getSavedTodos = _ => {
+const getSavedTodos = () => {
     const todosJSON = localStorage.getItem('todos')
-    if (todosJSON !== null){
-        return JSON.parse(todosJSON)
-    } else {
+    try {
+        return todosJSON ? JSON.parse(todosJSON) : []
+    } catch (error) {
         return []
     }
 }
 
 // Save todos to localStorage
-const saveTodos = todos => {
-    localStorage.setItem('todos',JSON.stringify(todos))
-}
+const saveTodos = todos => localStorage.setItem('todos',JSON.stringify(todos))
+
 
 // Remove todo from list
 const removeTodo = id => {
-    const todoIndex = todos.findIndex(todo => {
-        return todo.id === id
-    })
+    const todoIndex = todos.findIndex(todo => todo.id === id)
 
     if (todoIndex > -1) {
         todos.splice(todoIndex, 1)
@@ -26,9 +23,7 @@ const removeTodo = id => {
 
 // Change todo status
 const isCompleted = (id, completedTodo) => {
-    const todoIndex = todos.findIndex(todo => {
-        return todo.id === id
-    })
+    const todoIndex = todos.findIndex(todo => todo.id === id)
     if (todoIndex > -1) {
         todos[todoIndex].completed = completedTodo
     }
@@ -72,9 +67,7 @@ const generateTodoDOM = todo => {
 
 // Generate todos summary
 const generateSummaryDOM = filteredToDos => {
-    const todosLeft = filteredToDos.filter(todo => {
-        return !todo.completed
-    })
+    const todosLeft = filteredToDos.filter(todo => !todo.completed)
     const summary = document.createElement('h2')
     summary.textContent = `You have ${todosLeft.length} todos left`
     return summary
