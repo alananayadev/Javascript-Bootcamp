@@ -1,8 +1,17 @@
-// Primitive value: string, number, boolean, null, undefined
+const puzzlEl = document.querySelector('#hangman-word')
+const guessesEl = document.querySelector('#guesses')
 
-// Object: myObject --> Object.prototype --> null
-// Array: myArray --> Array.prototype --> Object.prototype --> null
-// Function: myFunc --> Function.prototype --> Object.prototype --> null
+const newGame = new Hangman("nueva Jersey", 4)
+puzzlEl.textContent = newGame.getPuzzle()
+guessesEl.textContent = newGame.statusMessages()
 
-const getScore = () => 1
-console.log(getScore)
+
+window.addEventListener('keypress', e => {
+    if (newGame.status === 'playing') {
+        const guess = String.fromCharCode(e.charCode)
+        newGame.guessLetter(guess)
+        newGame.checkStatus()
+        puzzlEl.textContent = newGame.getPuzzle()
+        guessesEl.textContent = newGame.statusMessages()
+    }
+})
