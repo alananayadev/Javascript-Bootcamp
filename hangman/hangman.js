@@ -30,7 +30,7 @@ class Hangman {
         })
         return puzzle
     }
-    checkStatus() {1
+    checkStatus() {
         if (!this.puzzle.includes('*')) {
             this.status = 'finished'
         }

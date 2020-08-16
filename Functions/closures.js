@@ -35,5 +35,5 @@ const createTipper = (tip = 15) => {
     return bill => bill * (tip/100)
 }
 
-const tip = createTipper()
-console.log(tip(100))
+const tipIt = createTipper()
+console.log(tipIt(100))
