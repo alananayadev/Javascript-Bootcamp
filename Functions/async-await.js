@@ -1,0 +1,22 @@
+const getDataPromise = (num) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            typeof num === 'number' ? resolve(num * 2) : reject('Number must be provided')
+        }, 2000);
+    })
+} 
+
+const processData = async () => {
+    let data = await getDataPromise(2)
+    if (data === 4) {
+        throw new Error('You fucked it up')
+    }
+    data = await getDataPromise(data)
+    return data
+}
+
+processData().then((data) => {
+    console.log('Data', data)   
+}).catch((error) => {
+    console.log(error)
+})
