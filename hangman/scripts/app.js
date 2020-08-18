@@ -2,7 +2,7 @@
 //Request - What do we want to do
 //Response - What was actually done
 
-const puzzlEl = document.querySelector('#hangman-word')
+const puzzlEl = document.querySelector('#puzzle')
 const guessesEl = document.querySelector('#guesses')
 let newGame
 
@@ -10,19 +10,23 @@ window.addEventListener('keypress', e => {
     if (newGame.status === 'playing') {
         const guess = String.fromCharCode(e.charCode)
         newGame.guessLetter(guess)
-        newGame.checkStatus()
-        puzzlEl.textContent = newGame.puzzle
-        guessesEl.textContent = newGame.statusMessages
+        render()
     }
 })
 
 const render = () => {
-    puzzlEl.textContent = newGame.puzzle
+    puzzlEl.innerHTML = ''
     guessesEl.textContent = newGame.statusMessages
+
+    newGame.puzzle.split('').forEach(letter => {
+        const letterEl = document.createElement('span')
+        letterEl.textContent = letter
+        puzzlEl.appendChild(letterEl)  
+    })
 }
 
 const startGame = async () => {
-    const puzzle = await getPuzzle('1')
+    const puzzle = await getPuzzle('2')
     newGame = new Hangman(puzzle, 5)
     render()
 }

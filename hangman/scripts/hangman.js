@@ -39,6 +39,7 @@ class Hangman {
         }
     }
     get statusMessages() {
+        this.checkStatus()
         switch (this.status) {
             case 'playing':
                 return `Guesses left: ${this.remainingGuesses}`
