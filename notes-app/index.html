@@ -2,10 +2,18 @@
 <html>
 <head>
     <title>Notes App</title>
+    <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-    <h1>Notes App</h1>
-    <h2>Take notes and never forget</h2>
+    <div class="header">
+        <div class="container">
+            <h1 class="header__title">Notes App</h1>
+            <h2 class="header__subtitle">Take notes and never forget</h2>
+        </div>    
+    </div>
+    <div class="actions">
+        
+    </div>
     <input id="search-text" type="text" placeholder="Filter Notes"/>
     <select id="filter-by">
         <option value="byEdited">Sort by last edited</option>
@@ -15,10 +23,10 @@
     <div id="notes">
     </div>
     <button id="create-note">Create Note</button>
-    <script src="uuidv4.js"></script>
+    <script src="scripts/uuidv4.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment-with-locales.min.js"></script>
-    <script src="notes-functions.js"></script>
-    <script src="notes-app.js"></script>
+    <script src="scripts/notes-functions.js"></script>
+    <script src="scripts/notes-app.js"></script>
 </body>
 </html>
 
