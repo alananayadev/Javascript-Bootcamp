@@ -8,16 +8,20 @@ const filters = {
 renderTodos(todos, filters)
 
 document.querySelector('#add-todo-form').addEventListener('submit', e => {
+    const text = e.target.elements.newTodo.value.trim()
+    console.log(text)
     e.preventDefault()
-    let newTodo = e.target.elements.newTodo
-    todos.push({
-        id: uuidv4(),
-        text: newTodo.value, 
-        completed: false
-    })
-    saveTodos(todos)
-    newTodo.value = ''
-    renderTodos(todos, filters)
+    if (text.length > 0){
+        todos.push({
+            id: uuidv4(),
+            text, 
+            completed: false
+        })
+        saveTodos(todos)
+        e.target.elements.newTodo.value = ''
+        renderTodos(todos, filters)
+    }
+    
 })
 
 document.querySelector('#filter-todos-text').addEventListener('input', e => {

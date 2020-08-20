@@ -1,3 +1,4 @@
+'use strict'
 //Fetch existing todos from localStorage
 const getSavedTodos = () => {
     const todosJSON = localStorage.getItem('todos')
@@ -31,7 +32,8 @@ const isCompleted = (id, completedTodo) => {
 
 // Generate Todo DOM
 const generateTodoDOM = todo => {
-    const todoElement = document.createElement('div')
+    const todoElement = document.createElement('label')
+    const containerEl = document.createElement('div')
     const checkbox = document.createElement('input')
     const todoText = document.createElement('span')
     const removeButton = document.createElement('button')
@@ -39,9 +41,9 @@ const generateTodoDOM = todo => {
     // Configure checkbox for todo
 
     checkbox.setAttribute('type', 'checkbox')
-    todoElement.appendChild(checkbox)
     checkbox.checked = todo.completed
-    todoElement.addEventListener('change', e => {
+    containerEl.appendChild(checkbox)
+    checkbox.addEventListener('change', e => {
         const completedTodo = e.target.checked
         console.log(completedTodo);
         isCompleted(todo.id, completedTodo)
@@ -51,10 +53,16 @@ const generateTodoDOM = todo => {
 
     // Add todo content to list
     todoText.textContent = todo.text
-    todoElement.appendChild(todoText)
+    containerEl.appendChild(todoText)
+
+    // Setup container
+    todoElement.classList.add('list-item')
+    containerEl.classList.add('list-item__container')
+    todoElement.appendChild(containerEl)
 
     // Add remove button
-    removeButton.textContent = 'x'
+    removeButton.textContent = 'remove'
+    removeButton.classList.add('button', 'button--text')
     todoElement.appendChild(removeButton)
     removeButton.addEventListener('click', e => {
         removeTodo(todo.id)
@@ -69,24 +77,34 @@ const generateTodoDOM = todo => {
 const generateSummaryDOM = filteredToDos => {
     const todosLeft = filteredToDos.filter(todo => !todo.completed)
     const summary = document.createElement('h2')
-    summary.textContent = `You have ${todosLeft.length} todos left`
+    summary.classList.add('list-title')
+    const plural = todosLeft.length === 1 ? '' : 's'
+    summary.textContent = `You have ${todosLeft.length} todo${plural} left`
     return summary
 }
 
 // Render todos list
 const renderTodos = (todos, filters) => {
+    const todoEl = document.querySelector('#todos')
     const filteredToDos = todos.filter(todo => {
         const searchTextMatch = todo.text.toLowerCase().includes(filters.searchText.toLowerCase())
         const hideCompletedMatch = !filters.hideCompleted || !todo.completed
         return searchTextMatch && hideCompletedMatch
     })
 
-    document.querySelector('#todos').innerHTML = ''
-    const summary = generateSummaryDOM(filteredToDos)
-    document.querySelector('#todos').appendChild(summary)
+    if (filteredToDos.length > 0){
+        todoEl.innerHTML = ''
+        const summary = generateSummaryDOM(filteredToDos)
+        todoEl.appendChild(summary)
 
-    filteredToDos.forEach(todo => {
-        const todoElement = generateTodoDOM(todo)
-        document.querySelector('#todos').appendChild(todoElement)
-    });
+        filteredToDos.forEach(todo => {
+            const todoElement = generateTodoDOM(todo)
+            todoEl.appendChild(todoElement)
+        });
+    }else {
+        const emptyTodos = document.createElement('p')
+        emptyTodos.textContent = 'No to-dos to show'
+        emptyTodos.classList.add('empty-message')
+        todoEl.appendChild(emptyTodos)
+    }
 }
